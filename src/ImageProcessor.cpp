@@ -1,7 +1,11 @@
 #include "ImageProcessor.hpp"
-#include <stdexcept>
 #include <iostream>
 
+/*
+ * @brief: Read an 24-bit bitmap
+ * @param img: dest image to read in
+ * @param path: image path to read
+ */
 void ImageProcessor::readImage(Image& img, const std::string& path) {
     // Open file
     std::ifstream inp(path, std::ios::binary);
@@ -10,14 +14,12 @@ void ImageProcessor::readImage(Image& img, const std::string& path) {
 
     // Read header
     inp.read(reinterpret_cast<char*>(&img.header), sizeof(img.header));
-    std::cout << "header\n";
     
     if (img.header.signature != 0x4D42) // check 24bitmap format
         throw std::invalid_argument("Invalid file format");
 
     // Read dib
     inp.read(reinterpret_cast<char*>(&img.dib), sizeof(img.dib));
-    std::cout << "dib\n";
 
     // Read pixel array
     int w = img.dib.width, h = img.dib.height;
@@ -36,6 +38,11 @@ void ImageProcessor::readImage(Image& img, const std::string& path) {
     inp.close(); // close file
 }
 
+/*
+ * @brief Write a 24-bit bitmap
+ * @param img: source image
+ * @param path: dest file to write
+ */
 void ImageProcessor::writeImage(const Image& img, const std::string& path) {
     std::ofstream out(path, std::ios::binary); // Open file always sucess
    
@@ -61,4 +68,89 @@ void ImageProcessor::writeImage(const Image& img, const std::string& path) {
     }
 
     out.close();
+}
+
+/*
+ * @brief Convert an image to grayscale
+ * @param img: source image
+ */
+Image ImageProcessor::convertGrayscale(const Image& img) {
+    Image res;
+
+    // Copy header and dib, because header and dib of res image stay the same to img
+    res.header = img.header;
+    res.dib = img.dib;
+
+    // Grayscale Pixel array
+    int w = img.dib.width, h = img.dib.height;
+    res.pixelArr = new Pixel[w * h]; // allocate memory
+
+    // Process each Pixel
+    for (int i = 0; i < h; ++i) {
+        for (int j = 0; j < w; ++j) {
+            int idx = i * w + j;
+            uint8_t tmp = static_cast<uint8_t>(0.299*img.pixelArr[idx].red + 0.587*img.pixelArr[idx].green + 0.114*img.pixelArr[idx].blue);
+
+            res.pixelArr[idx].red = res.pixelArr[idx].green = res.pixelArr[idx].blue = tmp; 
+        }
+    }
+
+    return res;
+}
+
+/*
+ * @brief Modify brightness of image
+ * @param img: source image
+ * @param bias: bias of brightness
+ */
+Image ImageProcessor::modifyBrightness(const Image& img, const double& rate) {
+    if (fabs(rate) <= EPS) return Image(); // Check if rate == 0
+
+    Image res;
+    // Remain header and dib
+    res.header = img.header;
+    res.dib = img.dib;
+
+    int w = img.dib.width, h = img.dib.height;
+    res.pixelArr = new Pixel[w * h]; // allocate memory for Pixel array
+    
+    // Process pixel array
+    int size = w * h;
+    for (int i = 0; i < size; ++i) {
+        // Modify red
+        res.pixelArr[i].red = static_cast<uint8_t>(255 * pow((img.pixelArr[i].red * 1.0 / 255), 1.0/rate)); 
+
+        // Modify green
+        res.pixelArr[i].green = static_cast<uint8_t>(255 * pow((img.pixelArr[i].green * 1.0 / 255), 1.0/rate)); 
+
+        // Modify blue
+        res.pixelArr[i].blue = static_cast<uint8_t>(255 * pow((img.pixelArr[i].blue * 1.0 / 255), 1.0/rate)); 
+    }
+
+    return res;
+}
+
+/*
+ * @brief Reverse color of an image
+ * @param img: source image
+ */
+Image ImageProcessor::reverseColor(const Image& img) {
+    Image res = img; // Create res with all attribute equal to img (deep copy)
+
+    // Reverse each pixel
+    for (int i = 0; i < img.dib.width * img.dib.height; ++i) {
+        res.pixelArr[i].red = 255 - res.pixelArr[i].red;
+        res.pixelArr[i].green = 255 - res.pixelArr[i].green;
+        res.pixelArr[i].blue = 255 - res.pixelArr[i].blue;
+    }
+
+    return res;
+}
+
+/*
+ * @brief Gaussian blue the image
+ * @param img: source image
+ */
+Image ImageProcessor::gaussianBlur(const Image& img) {
+
 }
