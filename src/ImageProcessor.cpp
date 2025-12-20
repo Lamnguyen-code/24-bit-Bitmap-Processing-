@@ -214,3 +214,29 @@ Image ImageProcessor::gaussianBlur(const Image& img) {
 
     return res;
 }
+
+/*
+ * @brief Sharpen the image
+ * @param img: source image
+ */
+Image ImageProcessor::sharpen(const Image& img) {
+    Image res = img;
+    
+    // iterate through every pixels except for pixels on edges
+    int w = img.dib.width, h = img.dib.height;
+    for (int i = 1; i < h - 1; ++i) {
+        for (int j = 1; j < w - 1; ++j) {
+            // compute new value
+            int newRed = 5*img.pixelArr[img.idx(i, j)].red - img.pixelArr[img.idx(i - 1, j)].red - img.pixelArr[img.idx(i + 1, j)].red - img.pixelArr[img.idx(i, j - 1)].red - img.pixelArr[img.idx(i, j + 1)].red;
+            int newGreen = 5*img.pixelArr[img.idx(i, j)].green - img.pixelArr[img.idx(i - 1, j)].green - img.pixelArr[img.idx(i + 1, j)].green - img.pixelArr[img.idx(i, j - 1)].green - img.pixelArr[img.idx(i, j + 1)].green;
+            int newBlue = 5*img.pixelArr[img.idx(i, j)].blue - img.pixelArr[img.idx(i - 1, j)].blue - img.pixelArr[img.idx(i + 1, j)].blue - img.pixelArr[img.idx(i, j - 1)].blue - img.pixelArr[img.idx(i, j + 1)].blue;
+
+            // assign and normalize to (0, 255)
+            res.pixelArr[res.idx(i, j)].red = static_cast<uint8_t>(std::max(0, std::min(newRed, 255))); 
+            res.pixelArr[res.idx(i, j)].green = static_cast<uint8_t>(std::max(0, std::min(newGreen, 255))); 
+            res.pixelArr[res.idx(i, j)].blue = static_cast<uint8_t>(std::max(0, std::min(newBlue, 255))); 
+        }
+    }
+
+    return res;
+}

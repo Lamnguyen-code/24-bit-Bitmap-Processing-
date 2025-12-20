@@ -6,6 +6,7 @@
 #include <exception>
 #include <limits>
 #include <cmath>
+#include <vector>
 
 const double EPS = std::numeric_limits<double>::epsilon();
 
@@ -19,4 +20,5 @@ public:
     Image reverseColor(const Image&); // Reverse color of an image
     Image blur(const Image&); // blur the image
     Image gaussianBlur(const Image&);// gaussian blur the image
+    Image sharpen(const Image&); // sharpen image
 };
