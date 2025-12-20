@@ -1,13 +1,14 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 
 // For ensuring that complier doesn't add padding to struct
 #pragma pack(push, 1)
 
 struct Pixel {
     uint8_t blue, green, red;
+    Pixel() {};
+    Pixel(int b, int g, int r): blue(b), green(g), red(r) {};
 };
 
 struct Header {
@@ -38,6 +39,8 @@ struct Image {
     Pixel* pixelArr;
    
     Image() {}
+
+    int idx(int, int) const; // map index of 2d array to 1d array
     
     // Copy constructor
     Image(const Image&);
@@ -48,45 +51,5 @@ struct Image {
     // Assignment operator
     Image& operator = (const Image&);
 };
-
-Image::Image(const Image& img) {
-    header = img.header;
-    dib = img.dib;
-
-    int w = dib.width, h = dib.height;
-    int size = w * h;
-
-    pixelArr = new Pixel[w * h];
-    for (int i = 0; i < size; ++i) 
-        pixelArr[i] = img.pixelArr[i];
-}
-
-Image::~Image() {
-    if (pixelArr) 
-        delete[] pixelArr;
-}
- 
-Image& Image::operator = (const Image& img) {
-    header = img.header;
-    dib = img.dib;
-
-    int w = dib.width, h = dib.height;
-    
-    // Create Pixel array
-    Pixel* buff = new Pixel[w * h];
-    int size = w * h;
-    for (int i = 0; i < size; ++i) {
-        buff[i] = img.pixelArr[i];
-    }
-
-    // Delete old pixel array
-    delete[] this -> pixelArr;
-
-    // Assign to buffer
-    this -> pixelArr = buff;
-
-    return *this;
-}
-
 
 #pragma pack(pop)

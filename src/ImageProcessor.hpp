@@ -17,5 +17,6 @@ public:
     Image convertGrayscale(const Image&); // Convert image to grayscale 
     Image modifyBrightness(const Image&, const double&); // Modify brightness of image
     Image reverseColor(const Image&); // Reverse color of an image
-    Image gaussianBlur(const Image&); // gaussian blur the image
+    Image blur(const Image&); // blur the image
+    Image gaussianBlur(const Image&);// gaussian blur the image
 };

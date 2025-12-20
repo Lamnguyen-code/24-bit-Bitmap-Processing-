@@ -148,9 +148,69 @@ Image ImageProcessor::reverseColor(const Image& img) {
 }
 
 /*
- * @brief Gaussian blue the image
+ * @brief Blur the image
+ * @param img: source image
+ */
+Image ImageProcessor::blur(const Image& img) {
+    Image res = img;
+    
+    int w = img.dib.width, h = img.dib.height;
+    for (int i = 1; i < h - 1; ++i) {
+        for (int j = 1; j < w - 1; ++j) { // iteratre through every pixel except for pixels on edges
+
+            // iterate from (i - 1, j - 1) to (i + 1, j + 1)
+            unsigned newRed = 0, newGreen = 0, newBlue = 0;
+            for (int t = -1; t <= 1; ++t) {
+                for (int k = -1; k <= 1; ++k) {
+
+                    // add all surrouded pixels
+                    newRed += img.pixelArr[img.idx(i + t, j + k)].red;
+                    newGreen += img.pixelArr[img.idx(i + t, j + k)].green;
+                    newBlue += img.pixelArr[img.idx(i + t, j + k)].blue;
+                }
+            }
+
+            newRed /= 9, newBlue /= 9, newGreen /= 9;
+
+            // assign new pixel color 
+            res.pixelArr[res.idx(i, j)] = Pixel(newBlue, newGreen, newRed);
+        } 
+    }
+
+    return res;
+}
+
+/*
+ * @brief Blur the image (Gaussian)
  * @param img: source image
  */
 Image ImageProcessor::gaussianBlur(const Image& img) {
+    Image res = img;
+    
+    int w = img.dib.width, h = img.dib.height;
+    for (int i = 1; i < h - 1; ++i) {
+        for (int j = 1; j < w - 1; ++j) { // iteratre through every pixel except for pixels on edges
 
+            // iterate from (i - 1, j - 1) to (i + 1, j + 1)
+            unsigned newRed = 0, newGreen = 0, newBlue = 0;
+            for (int t = -1; t <= 1; ++t) {
+                for (int k = -1; k <= 1; ++k) {
+                    // compute coefficient
+                    unsigned int coef = pow(2, 2 - abs(t) - abs(k));
+
+                    // add all surrouded pixels
+                    newRed += coef * img.pixelArr[img.idx(i + t, j + k)].red;
+                    newGreen += coef * img.pixelArr[img.idx(i + t, j + k)].green;
+                    newBlue += coef * img.pixelArr[img.idx(i + t, j + k)].blue;
+                }
+            }
+
+            newRed /= 16, newBlue /= 16, newGreen /= 16;
+
+            // assign new pixel color 
+            res.pixelArr[res.idx(i, j)] = Pixel(newBlue, newGreen, newRed);
+        } 
+    }
+
+    return res;
 }

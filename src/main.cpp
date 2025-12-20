@@ -16,20 +16,43 @@ int main() {
     }
     
     // ============= Test Grayscale ===============================
-    Image test_grayscale = imgProcessor.convertGrayscale(img); 
-    imgProcessor.writeImage(test_grayscale, dest_path + "test_grayscale.bmp");
+    // Image test_grayscale = imgProcessor.convertGrayscale(img); 
+    // imgProcessor.writeImage(test_grayscale, dest_path + "test_grayscale.bmp");
 
 
     // ============== Test brightness modifying ===================
-    Image test_brightness1 = imgProcessor.modifyBrightness(img, 2.0);
-    Image test_brightness2 = imgProcessor.modifyBrightness(img, 0.5);
+    // Image test_brightness1 = imgProcessor.modifyBrightness(img, 2.0);
+    // Image test_brightness2 = imgProcessor.modifyBrightness(img, 0.5);
 
-    imgProcessor.writeImage(test_brightness1, dest_path + "test_brightness1.bmp");
-    imgProcessor.writeImage(test_brightness2, dest_path + "test_brightness2.bmp");
+    // imgProcessor.writeImage(test_brightness1, dest_path + "test_brightness1.bmp");
+    // imgProcessor.writeImage(test_brightness2, dest_path + "test_brightness2.bmp");
 
 
     // =============== Test reverse color ==========================
-    Image test_reverseColor = imgProcessor.reverseColor(img);
-    imgProcessor.writeImage(test_reverseColor, dest_path + "test_reverseColor.bmp");
+    // Image test_reverseColor = imgProcessor.reverseColor(img);
+    // imgProcessor.writeImage(test_reverseColor, dest_path + "test_reverseColor.bmp");
+    
+    
+    // =============== Test blur ==============================
+    // Image test_blur = imgProcessor.blur(img);
+    // imgProcessor.writeImage(test_blur, dest_path + "test_blur.bmp");
+    //
+    // Image much_more_blur = test_blur;
+    // for (int i = 0; i < 50; ++i) 
+    //     much_more_blur = imgProcessor.blur(much_more_blur);
+    // imgProcessor.writeImage(much_more_blur, dest_path + "much_more_blur.bmp");
+
+
+     // =============== Test Gaussian blur ==============================
+    Image test_gaussianBlur = imgProcessor.gaussianBlur(img);
+    imgProcessor.writeImage(test_gaussianBlur, dest_path + "test_gaussianBlur.bmp");
+
+    Image much_more_gaussianBlur = test_gaussianBlur;
+    for (int i = 0; i < 50; ++i) 
+        much_more_gaussianBlur = imgProcessor.gaussianBlur(much_more_gaussianBlur);
+    imgProcessor.writeImage(much_more_gaussianBlur, dest_path + "much_more_gaussianBlur.bmp");
+
+    
+
     return 0;
 }
