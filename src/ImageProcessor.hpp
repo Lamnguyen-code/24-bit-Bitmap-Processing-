@@ -21,4 +21,8 @@ public:
     Image blur(const Image&); // blur the image
     Image gaussianBlur(const Image&);// gaussian blur the image
     Image sharpen(const Image&); // sharpen image
+    Image rotateLeft_90(const Image&); // rotate image 90 degree clockwisely
+    Image rotateRight_90(const Image&); // rotate image 90 degree anti-clockwisely
+    Image verticalFlip(const Image&); // Flip the image veritcally
+    Image horizontalFlip(const Image&); // Flip the image horizontally
 };

@@ -240,3 +240,80 @@ Image ImageProcessor::sharpen(const Image& img) {
 
     return res;
 }
+
+/*
+ * @brief Rotate the image 90 degree clockwisely
+ * @param img: source image
+ */
+Image ImageProcessor::rotateRight_90(const Image& img) {
+    Image res = img;
+    // Swap width and height of image
+    std::swap(res.dib.width, res.dib.height);
+
+    // Change pixel array
+    int w = img.dib.width, h = img.dib.height;
+
+    for (int i = 0; i < res.dib.height; ++i) {
+        for (int j = 0; j < res.dib.width; ++j) {
+            res.pixelArr[res.idx(i, j)] = img.pixelArr[img.idx(j, w - i)];
+        }
+    } 
+
+    return res;
+}
+
+/*
+ * @brief Rotate the image 90 degree anti-clockwisely
+ * @param img: source image
+ */
+Image ImageProcessor::rotateLeft_90(const Image& img) {
+    Image res = img;
+    // Swap width and height of image
+    std::swap(res.dib.width, res.dib.height);
+
+    // Change pixel array
+    int w = img.dib.width, h = img.dib.height;
+
+    for (int i = 0; i < res.dib.height; ++i) {
+        for (int j = 0; j < res.dib.width; ++j) {
+            res.pixelArr[res.idx(i, j)] = img.pixelArr[img.idx(h - j, i)];
+        }
+    } 
+
+    return res;
+}
+
+
+/*
+ * @brief Flip image vertically
+ * @param img: Source image
+ */
+Image ImageProcessor::verticalFlip(const Image& img) {
+    Image res = img;
+    int w = img.dib.width, h = img.dib.height;
+    
+    for (int i = 0; i < h/2; ++i) {
+        for (int j = 0; j < w; ++j) {
+            std::swap(res.pixelArr[res.idx(i, j)], res.pixelArr[res.idx(h - 1 - i, j)]);
+        }
+    }
+
+    return res;
+}
+
+/*
+ * @brief Flip image horizontally
+ * @param img: Source image
+ */
+Image ImageProcessor::horizontalFlip(const Image& img) {
+    Image res = img;
+    int w = img.dib.width, h = img.dib.height;
+
+    for (int i = 0; i < w/2; ++i) {
+        for (int j = 0; j < h; ++j) {
+            std::swap(res.pixelArr[res.idx(j, i)], res.pixelArr[res.idx(j, w - 1 - i)]);
+        }
+    }
+
+    return res;
+}

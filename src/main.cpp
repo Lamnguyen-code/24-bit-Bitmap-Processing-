@@ -34,10 +34,10 @@ int main() {
     
     
     // =============== Test blur ==============================
-    Image test_blur = imgProcessor.blur(img);
+    // Image test_blur = imgProcessor.blur(img);
     // imgProcessor.writeImage(test_blur, dest_path + "test_blur.bmp");
     //
-    Image much_more_blur = test_blur;
+    // Image much_more_blur = test_blur;
     // for (int i = 0; i < 50; ++i) 
     //     much_more_blur = imgProcessor.blur(much_more_blur);
     // imgProcessor.writeImage(much_more_blur, dest_path + "much_more_blur.bmp");
@@ -54,12 +54,29 @@ int main() {
     
     
     // ================= Test sharpen ===================================
-    Image test_sharpen = imgProcessor.sharpen(test_blur);
-    imgProcessor.writeImage(test_sharpen, dest_path + "test_sharpen.bmp");
+    // Image test_sharpen = imgProcessor.sharpen(test_blur);
+    // imgProcessor.writeImage(test_sharpen, dest_path + "test_sharpen.bmp");
+    //
+    // Image much_more_sharpen = much_more_blur;
+    // for (int i = 0; i < 20; ++i) 
+    //     much_more_sharpen = imgProcessor.sharpen(much_more_sharpen);
+    // imgProcessor.writeImage(much_more_sharpen, dest_path + "much_more_sharpen.bmp");
 
-    Image much_more_sharpen = much_more_blur;
-    for (int i = 0; i < 20; ++i) 
-        much_more_sharpen = imgProcessor.sharpen(much_more_sharpen);
-    imgProcessor.writeImage(much_more_sharpen, dest_path + "much_more_sharpen.bmp");
+
+    // ================= Test rotate ===================================
+    // Image test_rotateLeft90 = imgProcessor.rotateLeft_90(img);
+    // imgProcessor.writeImage(test_rotateLeft90, dest_path + "test_rotateLeft90.bmp");
+    //
+    // Image test_rotateRight90 = imgProcessor.rotateRight_90(img);
+    // imgProcessor.writeImage(test_rotateRight90, dest_path + "test_rotateRight90.bmp");
+
+
+    // =================== Test Flip ====================================
+    Image test_verticalFlip = imgProcessor.verticalFlip(img);
+    imgProcessor.writeImage(test_verticalFlip, dest_path + "test_verticalFlip.bmp");
+
+    
+    Image test_horizontalFlip = imgProcessor.horizontalFlip(img);
+    imgProcessor.writeImage(test_horizontalFlip, dest_path + "test_horizontalFlip.bmp");
     return 0;
 }
