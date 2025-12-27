@@ -25,4 +25,6 @@ public:
     Image rotateRight_90(const Image&); // rotate image 90 degree anti-clockwisely
     Image verticalFlip(const Image&); // Flip the image veritcally
     Image horizontalFlip(const Image&); // Flip the image horizontally
-};
+    Image crop(const Image&, double, double, double, double); // crop image, params are top, bottom, right, left
+    Image resize(const Image&, double, double); // resize image
+}; 

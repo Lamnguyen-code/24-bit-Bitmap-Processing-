@@ -9,6 +9,22 @@ struct Pixel {
     uint8_t blue, green, red;
     Pixel() {};
     Pixel(int b, int g, int r): blue(b), green(g), red(r) {};
+
+    Pixel& operator * (double r) {
+        red = uint8_t(r * red);
+        green = uint8_t(r * green);
+        blue = uint8_t(r * blue);
+
+        return *this;
+    }
+
+    Pixel& operator + (const Pixel& p) {
+        red += p.red;
+        green += p.green;
+        blue += p.blue;
+
+        return *this;
+    }
 };
 
 struct Header {

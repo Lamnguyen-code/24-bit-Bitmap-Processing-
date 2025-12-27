@@ -72,11 +72,24 @@ int main() {
 
 
     // =================== Test Flip ====================================
-    Image test_verticalFlip = imgProcessor.verticalFlip(img);
-    imgProcessor.writeImage(test_verticalFlip, dest_path + "test_verticalFlip.bmp");
+    // Image test_verticalFlip = imgProcessor.verticalFlip(img);
+    // imgProcessor.writeImage(test_verticalFlip, dest_path + "test_verticalFlip.bmp");
+    //
+    // Image test_horizontalFlip = imgProcessor.horizontalFlip(img);
+    // imgProcessor.writeImage(test_horizontalFlip, dest_path + "test_horizontalFlip.bmp");
 
-    
-    Image test_horizontalFlip = imgProcessor.horizontalFlip(img);
-    imgProcessor.writeImage(test_horizontalFlip, dest_path + "test_horizontalFlip.bmp");
+
+    // ==================== Test crop ===================================
+    // Image test_crop = imgProcessor.crop(img, 0.1, 0.2, 0.2, 0.15);
+    // imgProcessor.writeImage(test_crop, dest_path + "test_crop.bmp");
+
+
+    // ===================== Test resize ================================
+    Image test_resize1 = imgProcessor.resize(img, 2, 2);
+    Image test_resize2 = imgProcessor.resize(img, 0.5, 0.5);
+
+    imgProcessor.writeImage(test_resize1, dest_path + "test_resize1.bmp");
+    imgProcessor.writeImage(test_resize2, dest_path + "test_resize2.bmp");
+
     return 0;
 }

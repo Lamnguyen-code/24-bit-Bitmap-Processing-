@@ -1,5 +1,7 @@
 #include "ImageProcessor.hpp"
+#include "Image.hpp"
 #include <iostream>
+#include <stdexcept>
 
 /*
  * @brief: Read an 24-bit bitmap
@@ -70,7 +72,7 @@ void ImageProcessor::writeImage(const Image& img, const std::string& path) {
     out.close();
 }
 
-/*
+/*fl
  * @brief Convert an image to grayscale
  * @param img: source image
  */
@@ -315,5 +317,74 @@ Image ImageProcessor::horizontalFlip(const Image& img) {
         }
     }
 
+    return res;
+}
+
+/*
+ * @brief Crop image
+ * @param img: source image
+ * @param top: crop top rate (0 <= top <= 1)
+ * @param bottom: crop bottom rate (0 <= bottom <= 1)
+ * @param right: crop right rate (0 <= right <= 1)
+ * @param left: crop left rate (0 <= left <= 1)
+ */
+Image ImageProcessor::crop(const Image& img, double top, double bottom, double right, double left) {
+    if (top + bottom >= 1 || right + left >= 1) 
+        return img;
+
+    Image res;
+    res.header = img.header;
+    res.dib = img.dib;
+
+    int newW = int((1 - right - left) * img.dib.width); // new width and height of croped image
+    int newH = int((1 - top - bottom) * img.dib.height);
+
+    res.dib.width = newW, res.dib.height = newH;
+    int addH = int(bottom * img.dib.height), addW = int(left * img.dib.width);
+
+    res.pixelArr = new Pixel[newH * newW];
+
+    for (int i = 0; i < newH; ++i) {
+        for (int j = 0; j < newW; ++j) {
+            res.pixelArr[res.idx(i, j)] = img.pixelArr[img.idx(addH + i, addW + j)];
+        }
+    }
+
+    return res;
+}
+
+/* 
+ * @brief Resize image, use bilinear interpolation method
+ * @param img: source image
+ * @param width_r: width resize rate
+ * @param height_r: height resize rate
+ */
+Image ImageProcessor::resize(const Image& img, double height_r, double width_r) {
+    if (height_r <= 0 || width_r <= 0)
+        return img;
+
+    int newH = int(height_r * img.dib.height), newW = int(width_r * img.dib.width); // new image size
+
+    Image res;
+    res.header = img.header;
+    res.dib = img.dib;
+    res.dib.width = newW, res.dib.height = newH; // update new size
+
+    res.pixelArr = new Pixel[newW * newH]; // allocate memory for new pixel array
+                                           
+    for (int i = 0; i < newH; ++i) {
+        for (int j = 0; j < newW; ++j) {
+            double tmpI = i / height_r, tmpJ = j / width_r;
+
+            int roundedI = int(tmpI), roundedJ = int(tmpJ);
+            double dentaH = tmpI - roundedI, dentaW = tmpJ - roundedJ;
+        
+            Pixel tmpBottom = img.pixelArr[img.idx(roundedI, roundedJ)] * dentaW + img.pixelArr[img.idx(roundedI, roundedJ + 1)] * (1 - dentaW); // temp pixel between two bottom pixels
+            Pixel tmpTop = img.pixelArr[img.idx(roundedI + 1, roundedJ)] * dentaW + img.pixelArr[img.idx(roundedI + 1, roundedJ + 1)] * (1 - dentaW); // temp pixel between two top pixels 
+
+            res.pixelArr[res.idx(i, j)] = tmpBottom * dentaH + tmpTop * (1 - dentaH);
+        }
+    }
+    
     return res;
 }
